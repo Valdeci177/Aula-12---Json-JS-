@@ -1,0 +1,89 @@
+// Simulação de dados do livro (seriam carregados do arquivo JSON)
+let books = [];
+
+// Mostrar formulário para adicionar livro
+function showAddBookForm() {
+    document.getElementById('addBookForm').classList.remove('hidden');
+}
+
+// Ocultar formulário para adicionar livro
+function hideAddBookForm() {
+    document.getElementById('addBookForm').classList.add('hidden');
+}
+
+// Adicionar livro
+function addBook() {
+    const title = document.getElementById('title').value;
+    const author = document.getElementById('author').value;
+    const genre = document.getElementById('genre').value;
+    const year = parseInt(document.getElementById('year').value, 10);
+    const rating = parseFloat(document.getElementById('rating').value);
+
+    if (title && author && genre && !isNaN(year) && !isNaN(rating)) {
+        books.push({ title, author, genre, year, rating });
+        saveBooks();
+        hideAddBookForm();
+        displayBooks();
+    } else {
+        alert('Por favor, preencha todos os campos corretamente.');
+    }
+}
+
+// Buscar livros
+function searchBooks() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const filteredBooks = books.filter(book =>
+        book.title.toLowerCase().includes(query) ||
+        book.author.toLowerCase().includes(query) ||
+        book.genre.toLowerCase().includes(query)
+    );
+    displayBooks(filteredBooks);
+}
+
+// Classificar livros
+function sortBooks() {
+    const sortBy = document.getElementById('sortBy').value;
+    const sortedBooks = [...books].sort((a, b) => {
+        if (sortBy === 'rating') {
+            return b.rating - a.rating; // Classificar por avaliação (decrescente)
+        }
+        return a[sortBy].localeCompare(b[sortBy]); // Classificar por título ou autor (crescente)
+    });
+    displayBooks(sortedBooks);
+}
+
+// Exibir livros
+function displayBooks(booksToDisplay = books) {
+    const bookList = document.getElementById('bookList');
+    bookList.innerHTML = '';
+    booksToDisplay.forEach(book => {
+        const bookItem = document.createElement('div');
+        bookItem.className = 'book-item';
+        bookItem.innerHTML = `
+            <h3>${book.title}</h3>
+            <p><strong>Autor:</strong> ${book.author}</p>
+            <p><strong>Gênero:</strong> ${book.genre}</p>
+            <p><strong>Ano:</strong> ${book.year}</p>
+            <p><strong>Avaliação:</strong> ${book.rating}</p>
+        `;
+        bookList.appendChild(bookItem);
+    });
+}
+
+// Salvar livros no arquivo JSON (Simulado)
+function saveBooks() {
+    // Aqui você implementaria a lógica para salvar no arquivo JSON
+    console.log('Livros salvos:', books);
+}
+
+// Carregar livros do arquivo JSON (Simulado)
+function loadBooks() {
+    // Aqui você implementaria a lógica para carregar livros do arquivo JSON
+    console.log('Livros carregados:', books);
+}
+
+// Inicializar
+document.addEventListener('DOMContentLoaded', () => {
+    loadBooks();
+    displayBooks();
+});
